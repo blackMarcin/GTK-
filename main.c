@@ -10,7 +10,6 @@
     GtkWindow *start_window;
   };
 int login_counter = 0 ;
-
 static void close_window (GtkWidget * close_button, GtkWidget * close_window)
 {
   gtk_widget_destroy(close_window);
@@ -37,11 +36,9 @@ static void check_password (GtkWidget *button, gpointer data)
   else {
      login_counter ++ ;
      if (login_counter >= 3){
-        //gtk_widget_destroy(window);
         GtkWidget *errorWindow;
         errorWindow = gtk_message_dialog_new(dataptr->login_window,GTK_DIALOG_MODAL,GTK_MESSAGE_ERROR,GTK_BUTTONS_CLOSE, "Przekroczono limit logowan");
         g_signal_connect (errorWindow, "response",G_CALLBACK (gtk_main_quit),NULL);
-        //gtk_window_set_focus(errorWindow, NULL);
         gtk_widget_show_all(errorWindow);
      }
      else {
@@ -56,11 +53,6 @@ static void check_password (GtkWidget *button, gpointer data)
         g_signal_connect(G_OBJECT(OKbutton), "clicked", G_CALLBACK(close_window), window);
         gtk_widget_show_all(window);
      }
-
-  //1. utworzyć i wyśietlić okinko informacyjne - błąd logowania jeden
-  //przycisk ok
-  //2. zliczać błeðne próby logowania
-  //3.Jeżeli osiągnięto limit błędów zwinąc okna i aplikacje
   return;
 
   }
@@ -81,8 +73,8 @@ static void login (GtkWidget *wid, GtkWidget *wind)
 
   vbox = gtk_vbox_new(TRUE,10);
 
-  label_user = gtk_label_new("Username:  ");
-  label_password = gtk_label_new("Password:  ");
+  label_user = gtk_label_new("Użytkownik:  ");
+  label_password = gtk_label_new("Hasło:  ");
 
   entry_name = gtk_entry_new();
   entry_password = gtk_entry_new();
@@ -140,29 +132,41 @@ static void registerUser (GtkWidget *wid, GtkWidget *wind)
 int main (int argc, char *argv[])
 {
   gtk_init(&argc, &argv);
-
+  GtkWidget *hbox1, *hbox2, *hbox3 ;
   GtkWidget *window = NULL;
   GtkWidget *button = NULL;
   GtkWidget *vbox = NULL ;
+  GtkWidget *label_login = NULL;
+  GtkWidget *label_register = NULL;
+  GtkWidget *question = NULL;
 
-  vbox = gtk_vbox_new (TRUE,10) ;
-
+  vbox = gtk_vbox_new (FALSE,0) ;
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_position(window, GTK_WIN_POS_CENTER);
-
+  gtk_window_set_default_size(window, 400,100);
   gtk_window_set_title (GTK_WINDOW (window), "Witamy w ksiegarni");
 
+  label_login = gtk_label_new("Logowanie Użytkowinia:  ");
   button = gtk_button_new_with_label("Zaloguj");
-  gtk_container_add(GTK_CONTAINER(window), vbox);
-  gtk_box_pack_start (GTK_BOX (vbox), button, TRUE, TRUE, 0);
+
+  hbox1 = gtk_hbox_new(TRUE,10);
+  gtk_box_pack_start (GTK_BOX (hbox1), label_login, FALSE, FALSE, 5);
+  gtk_box_pack_start (GTK_BOX (hbox1), button, FALSE, FALSE, 10);
 
   g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(login), window);
 
+  label_register = gtk_label_new("Rejestracja:  ");
   button = gtk_button_new_with_label("Rejestracja użytkownika");
-  gtk_box_pack_start (GTK_BOX (vbox), button, TRUE, TRUE, 0);
+
+  hbox2 = gtk_hbox_new(TRUE,10);
+  gtk_box_pack_start (GTK_BOX (hbox2), label_register, FALSE, FALSE, 5);
+  gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 10);
+
   g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(registerUser), window);
 
-
+  gtk_box_pack_start (GTK_BOX (vbox),hbox1, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox),hbox2, TRUE, TRUE, 0);
+  gtk_container_add(GTK_CONTAINER(window), vbox);
   gtk_widget_show_all(window);
   gtk_main();
 
