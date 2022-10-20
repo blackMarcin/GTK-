@@ -138,7 +138,7 @@ int main (int argc, char *argv[])
   GtkWidget *vbox = NULL ;
   GtkWidget *label_login = NULL;
   GtkWidget *label_register = NULL;
-  GtkWidget *question = NULL;
+  GtkWidget *label_question = NULL;
 
   vbox = gtk_vbox_new (FALSE,0) ;
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
@@ -148,24 +148,31 @@ int main (int argc, char *argv[])
 
   label_login = gtk_label_new("Logowanie Użytkowinia:  ");
   button = gtk_button_new_with_label("Zaloguj");
+  gtk_widget_set_size_request(button, 200, 25);
 
   hbox1 = gtk_hbox_new(TRUE,10);
   gtk_box_pack_start (GTK_BOX (hbox1), label_login, FALSE, FALSE, 5);
   gtk_box_pack_start (GTK_BOX (hbox1), button, FALSE, FALSE, 10);
 
   g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(login), window);
+  label_question = gtk_label_new("Nie masz jeszcze konta?   Zarejestruj sie.");
+  hbox2 = gtk_hbox_new(TRUE,10);
+  gtk_box_pack_start (GTK_BOX (hbox2), label_question, FALSE, FALSE, 5);
 
   label_register = gtk_label_new("Rejestracja:  ");
   button = gtk_button_new_with_label("Rejestracja użytkownika");
+  gtk_widget_set_size_request(button, 200, 25);
 
-  hbox2 = gtk_hbox_new(TRUE,10);
-  gtk_box_pack_start (GTK_BOX (hbox2), label_register, FALSE, FALSE, 5);
-  gtk_box_pack_start (GTK_BOX (hbox2), button, FALSE, FALSE, 10);
+  hbox3 = gtk_hbox_new(TRUE,10);
+  gtk_box_pack_start (GTK_BOX (hbox3), label_register, FALSE, FALSE, 5);
+  gtk_box_pack_start (GTK_BOX (hbox3), button, FALSE, FALSE, 10);
 
   g_signal_connect(G_OBJECT(button), "clicked", G_CALLBACK(registerUser), window);
 
   gtk_box_pack_start (GTK_BOX (vbox),hbox1, TRUE, TRUE, 0);
   gtk_box_pack_start (GTK_BOX (vbox),hbox2, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox),hbox3, TRUE, TRUE, 0);
+
   gtk_container_add(GTK_CONTAINER(window), vbox);
   gtk_widget_show_all(window);
   gtk_main();

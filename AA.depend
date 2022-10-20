@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1666202304 source:/home/marcin/Pulpit/AA/main.c
+1666271190 source:/home/marcin/Pulpit/AA/main.c
 	<stdlib.h>
 	<gtk/gtk.h>
 
