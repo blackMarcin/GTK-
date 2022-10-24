@@ -9,7 +9,16 @@
     GtkWindow *login_window;
     GtkWindow *start_window;
   };
+struct register_user{
+    GtkWidget *name ;
+    GtkWidget *surname;
+    GtkWindow *login_mail;
+    GtkWindow *password;
+    GtkWindow *repeat_password;
+};
+
 int login_counter = 0 ;
+
 static void close_window (GtkWidget * close_button, GtkWidget * close_window)
 {
   gtk_widget_destroy(close_window);
@@ -58,6 +67,18 @@ static void check_password (GtkWidget *button, gpointer data)
   }
  return ;
 }
+
+static void check_register (GtkWidget *button, gpointer data){
+// 1.funkcja sprawdzająca czy użytkownik o danym loginie nie istnieje w bazie danych
+// 2.funkcja sprawdzająca czy hasło sie zgadza
+// 3.funkcja dodająca do bazy danych nowego użytkowinika
+ //struct register_user * dataptr ;
+// dataptr = (struct login_password*) data ;
+// if (((strcmp(gtk_entry_get_text(dataptr->password), ((strcmp(gtk_entry_get_text(dataptr->repeat_password)))))==0))){
+ }
+
+}
+
 
 static void login (GtkWidget *wid, GtkWidget *wind)
 {
@@ -121,10 +142,67 @@ static void login (GtkWidget *wid, GtkWidget *wind)
 
 static void registerUser (GtkWidget *wid, GtkWidget *wind)
 {
- /* secondWindow =gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_position(secondWindow, GTK_WIN_POS_CENTER);
-  gtk_window_set_title(GTK_WINDOW(secondWindow), "Rejestracja użytkownika");
-  gtk_widget_show_all(secondWindow);*/
+  GtkWidget *register_window = NULL ;
+  GtkWidget *table;
+  GtkWidget *register_button = NULL;
+  GtkWidget *hbox;
+  struct register_user * ru ;
+
+  GtkWidget *label;
+
+  table = gtk_table_new(5,2,TRUE);
+
+  GtkWidget *entry_name;
+  GtkWidget *entry_surname;
+  GtkWidget *entry_login;
+  GtkWidget *entry_password;
+  GtkWidget *entry_repeat_password;
+  entry_name = gtk_entry_new();
+  entry_surname = gtk_entry_new();
+  entry_login = gtk_entry_new();
+  entry_password = gtk_entry_new();
+  entry_repeat_password = gtk_entry_new();
+  register_button = gtk_button_new_with_label("Register");
+
+  GString *values[5] = {"Imię:",
+                        "Nazwisko:",
+                        "Login/email:",
+                        "Hasło:",
+                        "Powtórz hasło:"};
+
+  //create new dialoge window to register uster
+  register_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW (register_window), "Rejestracja użytkownika");
+  gtk_window_set_default_size(register_window, 400, 200);
+  gtk_window_set_position(register_window, GTK_WIN_POS_CENTER);
+
+  //add table to window
+  gtk_container_add(GTK_CONTAINER(register_window), table);
+
+  /*label = gtk_label_new(values[0]);
+  gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 0, 1);*/
+  for (int i = 0; i < 5 ; i++){
+    label = gtk_label_new(values[i]);
+    gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, i, i+1);
+  }
+
+  gtk_table_attach_defaults(GTK_TABLE(table), entry_name, 1, 2, 0, 1);
+  gtk_table_attach_defaults(GTK_TABLE(table), entry_surname, 1, 2, 1, 2);
+  gtk_table_attach_defaults(GTK_TABLE(table), entry_login, 1, 2, 2, 3);
+  gtk_table_attach_defaults(GTK_TABLE(table), entry_password, 1, 2, 3, 4);
+  gtk_table_attach_defaults(GTK_TABLE(table), entry_repeat_password, 1, 2, 4, 5);
+  gtk_table_attach_defaults(GTK_TABLE(table), register_button, 0, 2, 5, 6);
+
+  ru = g_new0(struct register_user, 1);
+  ru->name = entry_name;
+  ru->surname =entry_surname;
+  ru->login_mail = entry_login;
+  ru->password = entry_password;
+  ru->repeat_password = entry_repeat_password;
+  g_signal_connect(G_OBJECT(register_button), "clicked", G_CALLBACK(check_register),(gpointer)ru);
+
+  gtk_widget_show_all(register_window);
+
 }
 
 
