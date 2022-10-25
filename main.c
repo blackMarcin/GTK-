@@ -24,6 +24,16 @@ static void close_window (GtkWidget * close_button, GtkWidget * close_window)
   gtk_widget_destroy(close_window);
 }
 
+/*static void create_window(Gstring, string *titleButton) {
+  GtkWidget * window;
+  GtkWidget *button;
+  string titleWin;
+  string titleBut;
+  titleWin =
+  window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title(GTK_WINDOW(window), titleWindow);
+
+}*/
 static void check_password (GtkWidget *button, gpointer data)
 {
  const gchar *LOGIN = "Login" ;
@@ -63,18 +73,41 @@ static void check_password (GtkWidget *button, gpointer data)
         gtk_widget_show_all(window);
      }
   return;
-
   }
  return ;
 }
 
-static void check_register (GtkWidget *button, gpointer data){
+static void empty_entry(GtkWidget * entry){
+ const gchar * getText;
+ const gchar * emptyText;
+ emptyText = "";
+ getText = gtk_entry_get_text(entry);
+
+ if(getText== emptyText){
+  GtkWidget *window;
+  window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title(GTK_WINDOW(window), "Uzupełnji brakujące pole");
+  gtk_widget_show_all(window);
+ }
+
+}
+
+static void check_register (GtkWidget *button, gpointer data_register_user){
+// 0.funkcja sprawdzająca czy któreś pole nie zostało puste lub są wpisane same spacje
 // 1.funkcja sprawdzająca czy użytkownik o danym loginie nie istnieje w bazie danych
 // 2.funkcja sprawdzająca czy hasło sie zgadza
 // 3.funkcja dodająca do bazy danych nowego użytkowinika
- //struct register_user * dataptr ;
-// dataptr = (struct login_password*) data ;
-// if (((strcmp(gtk_entry_get_text(dataptr->password), ((strcmp(gtk_entry_get_text(dataptr->repeat_password)))))==0))){
+ struct register_user * dataptr ;
+ dataptr = (struct login_password*) data_register_user ;
+ empty_entry(dataptr->name);
+ const gchar *get_password;
+ const gchar *get_repeat_password;
+
+ if ((strcmp((gtk_entry_get_text(dataptr->repeat_password)), get_password = gtk_entry_get_text(dataptr->password))!=0)){
+  GtkWidget *window;
+  window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title(GTK_WINDOW(window), "Podane hasła różnią sie od siebie");
+  gtk_widget_show_all(window);
  }
 
 }
@@ -131,10 +164,7 @@ static void login (GtkWidget *wid, GtkWidget *wind)
   lp->login_window = secondWindow ;
   lp->start_window = wind ;
   g_signal_connect(G_OBJECT(login_button), "clicked", G_CALLBACK(check_password), (gpointer)lp);
-
   g_signal_connect(G_OBJECT(close_button), "clicked", G_CALLBACK(gtk_main_quit), NULL);
-
-
 
 
   gtk_widget_show_all(secondWindow);
@@ -149,6 +179,7 @@ static void registerUser (GtkWidget *wid, GtkWidget *wind)
   struct register_user * ru ;
 
   GtkWidget *label;
+  GtkWidget *entry;
 
   table = gtk_table_new(5,2,TRUE);
 
@@ -162,15 +193,11 @@ static void registerUser (GtkWidget *wid, GtkWidget *wind)
   entry_login = gtk_entry_new();
   entry_password = gtk_entry_new();
   entry_repeat_password = gtk_entry_new();
-  register_button = gtk_button_new_with_label("Register");
+  register_button = gtk_button_new_with_label("Rejestruj");
 
-  GString *values[5] = {"Imię:",
-                        "Nazwisko:",
-                        "Login/email:",
-                        "Hasło:",
-                        "Powtórz hasło:"};
+  GString *values[5] = {"Imię:","Nazwisko:","Login/email:","Hasło:","Powtórz hasło:"};
+  GtkWidget *entrys[5] = {entry_name,entry_surname,entry_login,entry_password,entry_repeat_password,register_button};
 
-  //create new dialoge window to register uster
   register_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (register_window), "Rejestracja użytkownika");
   gtk_window_set_default_size(register_window, 400, 200);
@@ -186,12 +213,12 @@ static void registerUser (GtkWidget *wid, GtkWidget *wind)
     gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, i, i+1);
   }
 
-  gtk_table_attach_defaults(GTK_TABLE(table), entry_name, 1, 2, 0, 1);
-  gtk_table_attach_defaults(GTK_TABLE(table), entry_surname, 1, 2, 1, 2);
-  gtk_table_attach_defaults(GTK_TABLE(table), entry_login, 1, 2, 2, 3);
-  gtk_table_attach_defaults(GTK_TABLE(table), entry_password, 1, 2, 3, 4);
-  gtk_table_attach_defaults(GTK_TABLE(table), entry_repeat_password, 1, 2, 4, 5);
+  for (int i = 0; i < 5 ; i++){
+    entrys[i] = gtk_entry_new();
+    gtk_table_attach_defaults(GTK_TABLE(table), entrys[i], 1, 2, i, i+1);
+  }
   gtk_table_attach_defaults(GTK_TABLE(table), register_button, 0, 2, 5, 6);
+
 
   ru = g_new0(struct register_user, 1);
   ru->name = entry_name;
