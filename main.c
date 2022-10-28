@@ -12,9 +12,9 @@
 struct register_user{
     GtkWidget *name ;
     GtkWidget *surname;
-    GtkWindow *login_mail;
-    GtkWindow *password;
-    GtkWindow *repeat_password;
+    GtkWidget *login_mail;
+    GtkWidget *password;
+    GtkWidget *repeat_password;
 };
 
 int login_counter = 0 ;
@@ -38,9 +38,13 @@ static void check_password (GtkWidget *button, gpointer data)
 {
  const gchar *LOGIN = "Login" ;
  const gchar *PASSWORD = "Haslo";
+ //const gchar *l;
+ //const gchar *h;
  struct login_password * dataptr ;
  dataptr = (struct login_password*) data ;
  GtkWidget *window = NULL;
+ //l = gtk_entry_get_text(dataptr->login);
+// h = gtk_entry_get_text(dataptr->password);
 
  if (((strcmp(gtk_entry_get_text(dataptr->login) , LOGIN)==0)) && ((strcmp(gtk_entry_get_text(dataptr->password) , PASSWORD)==0))){
      GtkWidget *window = NULL;
@@ -97,13 +101,15 @@ static void check_register (GtkWidget *button, gpointer data_register_user){
 // 1.funkcja sprawdzająca czy użytkownik o danym loginie nie istnieje w bazie danych
 // 2.funkcja sprawdzająca czy hasło sie zgadza
 // 3.funkcja dodająca do bazy danych nowego użytkowinika
- struct register_user * dataptr ;
- dataptr = (struct login_password*) data_register_user ;
- empty_entry(dataptr->name);
+ struct register_user * dataptr1 ;
+ dataptr1 = (struct login_password*) data_register_user ;
+ //empty_entry(dataptr->name);
  const gchar *get_password;
  const gchar *get_repeat_password;
+ get_password = gtk_entry_get_text(dataptr1->password);
+ get_repeat_password = gtk_entry_get_text(dataptr1->repeat_password);
 
- if ((strcmp((gtk_entry_get_text(dataptr->repeat_password)), get_password = gtk_entry_get_text(dataptr->password))!=0)){
+ if (strcmp(gtk_entry_get_text(dataptr1->repeat_password), (gtk_entry_get_text(dataptr1->password)))!=0){
   GtkWidget *window;
   window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title(GTK_WINDOW(window), "Podane hasła różnią sie od siebie");
@@ -163,6 +169,7 @@ static void login (GtkWidget *wid, GtkWidget *wind)
   lp->password = entry_password;
   lp->login_window = secondWindow ;
   lp->start_window = wind ;
+
   g_signal_connect(G_OBJECT(login_button), "clicked", G_CALLBACK(check_password), (gpointer)lp);
   g_signal_connect(G_OBJECT(close_button), "clicked", G_CALLBACK(gtk_main_quit), NULL);
 
@@ -206,8 +213,6 @@ static void registerUser (GtkWidget *wid, GtkWidget *wind)
   //add table to window
   gtk_container_add(GTK_CONTAINER(register_window), table);
 
-  /*label = gtk_label_new(values[0]);
-  gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, 0, 1);*/
   for (int i = 0; i < 5 ; i++){
     label = gtk_label_new(values[i]);
     gtk_table_attach_defaults(GTK_TABLE(table), label, 0, 1, i, i+1);
@@ -226,6 +231,7 @@ static void registerUser (GtkWidget *wid, GtkWidget *wind)
   ru->login_mail = entry_login;
   ru->password = entry_password;
   ru->repeat_password = entry_repeat_password;
+
   g_signal_connect(G_OBJECT(register_button), "clicked", G_CALLBACK(check_register),(gpointer)ru);
 
   gtk_widget_show_all(register_window);
